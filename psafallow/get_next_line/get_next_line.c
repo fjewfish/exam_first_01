@@ -1,4 +1,6 @@
 #include "get_next_line.h"
+#include <fcntl.h>
+#include <stdio.h>
 
 static char	*ft_strjoin(char *s, char c)
 {
@@ -39,4 +41,16 @@ int			get_next_line(char **line)
 	}
 	free(buffer);
 	return (flag);
+}
+
+int		main(void)
+{
+	int fd;
+	char *line;
+
+	fd = open("txt.txt", O_RDONLY);
+	while (get_next_line(&line))
+		printf("%s\n", line);
+	free(line);
+	close(fd);
 }
