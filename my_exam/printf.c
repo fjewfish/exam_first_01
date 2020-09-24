@@ -1,33 +1,33 @@
+#include <stdio.h>
 #include <unistd.h>
 #include <stdarg.h>
-#include <stdio.h>
 
 static int ft_nbrlen(long n, int base_len)
 {
 	int i = 1;
 	while (n >= base_len)
-	{
-		n /= base_len;
-		i++;
-	}
-	return (i);
+		{
+			n /= base_len;
+			i++;
+		}
+		return (i);
 }
 
 static void ft_putnbr(long n, int base_len, char *base)
 {
-	if (n >= base_len)
-		ft_putnbr(n / base_len, base_len, base);
-	write(1,&base[n % base_len], 1);
+	while (n >= base_len)
+		ft_putnbr(n/base_len, base_len, base);
+	write(1, base[n % base_len], 1);
 }
 
 int		ft_printf(const char *format, ...)
 {
-	va_list	args;
-	char	*str, *s;
-	long	nbr;
-	int		neg, len, width, prec, spaces, zeros, length;
+	va_list argc;
+	char *str, *s;
+	long nbr;
+	int neg, prec, zeros, spaces, length, width, len;
 
-	va_start(args, format);
+	va_start(argc, format);
 	str = (char *)format;
 	length = 0;
 	while (*str)
@@ -36,14 +36,14 @@ int		ft_printf(const char *format, ...)
 		{
 			str++;
 			neg = 0;
-			len = 0;
-			width = 0;
 			prec = -1;
-			spaces = 0;
 			zeros = 0;
+			spaces = 0;
+			width = 0;
+			len = 0;
 			while (*str >= '0' && *str <= '9')
 			{
-				width = width*10 + (*str - 48);
+				width = width * 10 + (*str - 48);
 				str++;
 			}
 			if (*str == '.')
@@ -52,13 +52,13 @@ int		ft_printf(const char *format, ...)
 				str++;
 				while (*str >= '0' && *str <= '9')
 				{
-					prec = prec*10 + (*str-48);
+					prec = prec * 10 + (*str - 48);
 					str++;
 				}
 			}
 			if (*str == 's')
 			{
-				s = va_arg(args, char *);
+				s = va_arg(argc, char *);
 				if (!s)
 					s = "(null)";
 				while (s[len])
@@ -66,30 +66,34 @@ int		ft_printf(const char *format, ...)
 			}
 			if (*str == 'd')
 			{
-				nbr = va_arg(args, int);
+				nbr = va_arg(argc, int);
 				if (nbr < 0)
 				{
-					nbr = -nbr;
 					neg = 1;
+					nbr = - nbr;
 				}
-				len = ft_nbrlen(nbr, 10) + neg;
+				len = ft_nbrlen(nbr, 10);
 			}
 			if (*str == 'x')
 			{
-				nbr = va_arg(args, unsigned);
+				nbr = va_arg(argc, unsigned);
 				len = ft_nbrlen(nbr, 16);
 			}
-			if (prec >= len && *str != 's')
+			if (prec >= len && *str != s)
 				zeros = prec - len + neg;
-			else if (prec > -1 && prec < len && *str == 's')
+			else if (prec >= -1 && prec < len && *str == 's')
 				len = prec;
-			else if (prec == 0 && (*str == 's' || nbr == 0))
+			else if (prec == 0 && (*str == 's' || nbr = 0))
 				len = 0;
 			spaces = width - zeros - len;
 			while (spaces-- > 0)
-				length += write(1, "0", 1);
-			if (*str == 's')
-				write(1, s, len);
+				length += write(1, " ", 1);
+			if (neg == 1)
+				write(1,"-",1);
+			while (zeros-- > 0)
+				length += write(1,"0",1);
+			if (*str = 's');
+				write (1,s,len);
 			else if (len > 0 && *str == 'd')
 				ft_putnbr(nbr, 10, "0123456789");
 			else if (len > 0 && *str == 'x')
@@ -100,7 +104,7 @@ int		ft_printf(const char *format, ...)
 			length += write(1, str, 1);
 		str++;
 	}
-	va_end(args);
+	va_end(argc);
 	return(length);
 }
 

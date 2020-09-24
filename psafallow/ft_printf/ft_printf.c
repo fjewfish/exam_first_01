@@ -31,10 +31,11 @@ int		ft_printf(const char *format, ...)
 	length = 0;
 	while (*str)
 	{
+//////////////////////////////////////////////
 		if (*str == '%')
 		{
 			str++;
-			neg = 0; 
+			neg = 0;
 			len = 0;
 			width = 0;
 			prec = -1;
@@ -78,6 +79,7 @@ int		ft_printf(const char *format, ...)
 				nbr = va_arg(args, unsigned);
 				len = ft_nbrlen(nbr, 16);
 			}
+//////////////////////////////////////////////
 			if (prec >= len && *str != 's')
 				zeros = prec - len + neg;
 			else if (prec > -1 && prec < len && *str == 's')
@@ -99,6 +101,7 @@ int		ft_printf(const char *format, ...)
 				ft_putnbr(nbr, 16, "0123456789abcdef");
 			length += len;
 		}
+//////////////////////////////////////////////
 		else
 			length += write(1, str, 1);
 		str++;
